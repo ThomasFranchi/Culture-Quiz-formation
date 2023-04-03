@@ -46,6 +46,58 @@ const questions = [
 /*************************/
 /* Contenu du DOM chargé */
 /*************************/
+
+let questionCounter = 0;
+let resultCounter = 0;
+
 document.addEventListener("DOMContentLoaded", () => {
-  // A FAIRE: Compléte le code pour de faire fonctionner le quizz, pour plus d'informations consulte le sujet
+  createQuestion();
 });
+
+function createQuestion() {
+  // verify if there's no more question
+  if (questionCounter === questions.length) {
+
+    // if there's no more question display thank you message
+    document.querySelector("#question").innerHTML =
+      " Merci d'avoir répondu. :)";
+    document.querySelector("#answers").innerHTML = "";
+    
+    // if not display question and answer
+  } else {
+    let p = document.querySelector("#question");
+    p.innerHTML = `${questions[questionCounter].question}`;
+    let ul = document.querySelector("#answers");
+    createAnswers(ul);
+  }
+
+  function createAnswers(ul) {
+    // Clear unordered list
+    ul.innerHTML = "";
+
+    // Display all possible answer for a question
+    questions[questionCounter].answers.forEach(function (element, index) {
+      let li = document.createElement("li");
+      li.innerText = element;
+      li.classList.add("answer");
+      ul.appendChild(li);
+      li.addEventListener("click", function () {
+        answerClicked(index, questions[questionCounter].correctAnswerIndex);
+      });
+    });
+  }
+
+  function answerClicked(index, correctAnswerIndex) {
+    // Increment the questionCounter by 1
+    ++questionCounter;
+
+    // If answer is corrrect increment the resultCounter by 1
+    if (index === correctAnswerIndex) {
+      ++resultCounter;
+      let span = document.querySelector("#score");
+      span.innerText = resultCounter;
+    }
+
+    createQuestion();
+  }
+}
